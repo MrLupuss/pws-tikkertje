@@ -36,21 +36,62 @@ while running:
         if event.type == pygame.QUIT:  # Als je op het kruisje klikt
             running=False
 
+    #renner_x_oud = renner.x
+    #renner_y_oud = renner.y
+    #keys=pygame.key.get_pressed()
+    #if keys[pygame.K_LEFT] and renner.x!=0:
+    #    renner.x-=snelheid_r
+    #elif keys[pygame.K_RIGHT] and renner.x!=Scherm_breedte-20:
+    #    renner.x+=snelheid_r
+    #elif keys[pygame.K_UP] and renner.y!=0:
+    #    renner.y-=snelheid_r
+    #elif keys[pygame.K_DOWN] and renner.y!=Scherm_lengte-50:
+    #    renner.y+=snelheid_r
+    #elif renner.colliderect(muur):
+    #    renner.y = renner_y_oud
+    #elif renner.colliderect(muur):
+    #    renner.x = renner_x_oud
+    
     renner_x_oud = renner.x
     renner_y_oud = renner.y
-    keys=pygame.key.get_pressed()
-    if keys[pygame.K_LEFT] and renner.x!=0:
-        renner.x-=snelheid_r
-    if keys[pygame.K_RIGHT] and renner.x!=Scherm_breedte-20:
+    d=jager.x-renner.x
+    if d==0: d=0.0001
+    e=jager.y-renner.y
+    if e==0: e=0.0001
+    f=abs(d/e)
+    if f>1 and d>0:
         renner.x+=snelheid_r
-    if keys[pygame.K_UP] and renner.y!=0:
-        renner.y-=snelheid_r
-    if keys[pygame.K_DOWN] and renner.y!=Scherm_lengte-50:
+    elif f>1 and d<0:
+        renner.x-=snelheid_r
+    elif f<1 and e>0:
         renner.y+=snelheid_r
+    elif f<1 and e<0:
+        renner.y-=snelheid_r
+    elif f==1 and e<0:
+        renner.y-=snelheid_r
+    elif f==1 and e>0:
+        renner.y+=snelheid_r
+    
     if renner.colliderect(muur):
-        renner.y = renner_y_oud
-    if renner.colliderect(muur):
-        renner.x = renner_x_oud
+        if renner.y!=renner_y_oud and renner.x+jager.x-2*muur.x<2*(muur.x+muur.width)-renner.x-jager.x:
+            renner.x-=snelheid_r
+            renner.y=renner_y_oud
+        elif renner.y!=renner_y_oud and renner.x+jager.x-muur.x*2>2*(muur.x+muur.width)-renner.x-jager.x:
+            renner.x+=snelheid_r
+            renner.y=renner_y_oud
+        elif renner.y!=renner_y_oud and renner.x+jager.x-muur.x*2==2*(muur.x+muur.width)-renner.x-jager.x:
+            renner.x+=snelheid_r
+            renner.y=renner_y_oud
+            
+        elif renner.x!=renner_x_oud and renner.y+jager.y-2*muur.y<2*(muur.y+muur.height)-renner.y-jager.y:
+            renner.y-=snelheid_r
+            renner.x=renner_x_oud
+        elif renner.x!=renner_x_oud and renner.y+jager.y-2*muur.y>2*(muur.y+muur.height)-renner.y-jager.y:
+            renner.y+=snelheid_r
+            renner.x=renner_x_oud
+        elif renner.x!=renner_x_oud and renner.y+jager.y-2*muur.y==2*(muur.y+muur.height)-renner.y-jager.y:
+            renner.y+=snelheid_r
+            renner.x=renner_x_oud
     
     jager_x_oud = jager.x
     jager_y_oud = jager.y
