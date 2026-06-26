@@ -21,6 +21,13 @@ ACHTERGROND_KLEUR = (50, 150, 255)
 
 klok = pygame.time.Clock() #snelheid van spel (fps)
 
+def eindscherm(winnaar):
+    scherm.fill(ACHTERGROND_KLEUR)
+    if winnaar == "Jager":
+        winner = lettertype.render("Jager wint",True,ZWART)
+        scherm.blit(winner,(100,100))
+    running=False
+
 renner=pygame.Rect(10,10,20,20)
 jager=pygame.Rect(Scherm_breedte-20,Scherm_lengte-50,20,20)
 muur=pygame.Rect(150, 350, 300, 20)
@@ -73,23 +80,23 @@ while running:
         jager.y+=snelheid_j
     
     if jager.colliderect(muur):
-        if jager.y!=jager_y_oud and jager.x+renner.x-2*muur.x<2*(muur.x+muur.width)-jager.x-renner.x:
+        if jager.y!=jager_y_oud and jager.x+renner.x-2*muur.x<2*(muur.x+muur.width)-jager.x-renner.x-40:
             jager.x-=snelheid_j
             jager.y=jager_y_oud
-        elif jager.y!=jager_y_oud and jager.x+renner.x-muur.x*2>2*(muur.x+muur.width)-jager.x-renner.x:
+        elif jager.y!=jager_y_oud and jager.x+renner.x-muur.x*2>2*(muur.x+muur.width)-jager.x-renner.x-40:
             jager.x+=snelheid_j
             jager.y=jager_y_oud
-        elif jager.y!=jager_y_oud and jager.x+renner.x-muur.x*2==2*(muur.x+muur.width)-jager.x-renner.x:
+        elif jager.y!=jager_y_oud and jager.x+renner.x-muur.x*2==2*(muur.x+muur.width)-jager.x-renner.x-40:
             jager.x+=snelheid_j
             jager.y=jager_y_oud
             
-        elif jager.x!=jager_x_oud and jager.y+renner.y-2*muur.y<2*(muur.y+muur.height)-jager.y-renner.y:
+        elif jager.x!=jager_x_oud and jager.y+renner.y-2*muur.y<2*(muur.y+muur.height)-jager.y-renner.y-40:
             jager.y-=snelheid_j
             jager.x=jager_x_oud
-        elif jager.x!=jager_x_oud and jager.y+renner.y-2*muur.y>2*(muur.y+muur.height)-jager.y-renner.y:
+        elif jager.x!=jager_x_oud and jager.y+renner.y-2*muur.y>2*(muur.y+muur.height)-jager.y-renner.y-40:
             jager.y+=snelheid_j
             jager.x=jager_x_oud
-        elif jager.x!=jager_x_oud and jager.y+renner.y-2*muur.y==2*(muur.y+muur.height)-jager.y-renner.y:
+        elif jager.x!=jager_x_oud and jager.y+renner.y-2*muur.y==2*(muur.y+muur.height)-jager.y-renner.y-40:
             jager.y+=snelheid_j
             jager.x=jager_x_oud
         
