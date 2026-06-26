@@ -21,13 +21,6 @@ ACHTERGROND_KLEUR = (50, 150, 255)
 
 klok = pygame.time.Clock() #snelheid van spel (fps)
 
-def eindscherm(winnaar):
-    scherm.fill(ACHTERGROND_KLEUR)
-    if winnaar == "Jager":
-        winner = lettertype.render("Jager wint",True,ZWART)
-        scherm.blit(winner,(100,100))
-    running=False
-
 renner=pygame.Rect(10,10,20,20)
 jager=pygame.Rect(Scherm_breedte-20,Scherm_lengte-50,20,20)
 muur=pygame.Rect(150, 350, 300, 20)
