@@ -7,7 +7,7 @@ pygame.init() #pygame opstarten
 Scherm_breedte=590
 Scherm_lengte=470
 scherm = pygame.display.set_mode((Scherm_breedte, Scherm_lengte))
-boundary = pygame.Rect(0, 0, Scherm_breedte, Scherm_lengte-33)
+boundary = pygame.Rect(0, 0, Scherm_breedte, Scherm_lengte-33)  # Maakt een vlak even groot als het speelveld
 lettertype1=pygame.font.SysFont("arial",36)
 lettertype2=pygame.font.SysFont("arial",20)
 
@@ -67,24 +67,24 @@ while running:
 
     if g>1:
         if renner.y>jager.y:
-            renner.y+=snelheid_r
+            renner.y-=snelheid_r
         else:
             renner.y+=snelheid_r
     if 1>g>0:
         if renner.y>jager.y:
-            renner.x+=snelheid_r
-        else:
             renner.x-=snelheid_r
+        else:
+            renner.x+=snelheid_r
     if 0>g>(-1):
         if renner.y>jager.y:
-            renner.x-=snelheid_r
-        else:
             renner.x+=snelheid_r
+        else:
+            renner.x-=snelheid_r
     if (-1)>g:
         if renner.y>jager.y:
-            renner.x+=snelheid_r
+            renner.y+=snelheid_r
         else:
-            renner.x-=snelheid_r
+            renner.y-=snelheid_r
 
 
     #renner_x_oud = renner.x
@@ -170,7 +170,7 @@ while running:
     scherm.blit(lettertype2.render(str(round(score,2)),True,WIT),(10,Scherm_lengte-30))
     pygame.display.flip() #Laat scherm nieuwst aanpassingen zien
     
-    renner.clamp_ip(boundary)
+    renner.clamp_ip(boundary)   # Houdt renner binnen het vlak
 
     if jager.colliderect(renner):
         scherm.fill(ACHTERGROND_KLEUR)
