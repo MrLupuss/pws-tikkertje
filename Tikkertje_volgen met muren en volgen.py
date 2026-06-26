@@ -107,7 +107,6 @@ while running:
     pygame.draw.rect(scherm, GROEN, renner)
     pygame.draw.rect(scherm, ROOD, jager)
     pygame.draw.rect(scherm, BLAUW, muur)
-#    pygame.draw.rect(scherm, BLAUW, juur)
     scherm.blit(lettertype2.render(str(round(score,2)),True,WIT),(10,Scherm_lengte-30))
     pygame.display.flip() #Laat scherm nieuwst aanpassingen zien
     
