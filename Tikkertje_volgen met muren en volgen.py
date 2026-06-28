@@ -27,7 +27,7 @@ renner=pygame.Rect(random.randint(10, 560),random.randint(10, 430),20,20)
 jager=pygame.Rect(random.randint(10, 560),random.randint(10, 430),20,20)
 #muur=pygame.Rect(150, 350, 300, 20)
 score=0
-snelheid_r=1.5
+snelheid_r=3
 snelheid_j=1
 #juur=pygame.Rect(150, 50, 10, 70)
 ruur=0
@@ -63,7 +63,7 @@ while running:
     if a==0: a=0.0001
     b=renner.y-jager.y
     if b==0: b=0.0001
-    c=abs(a/b)
+    c=round(abs(a/b), 1)
     g=a/b
 
 
@@ -115,7 +115,37 @@ while running:
             if scenario==8:
                 renner.y+=snelheid_r
         else:
-            scenario=0
+            if scenario==1:
+                #renner.x-=snelheid_r
+                scenario=0
+            if scenario==2:
+                #renner.x+=snelheid_r
+                scenario=0
+            if scenario==3:
+                #renner.y-=snelheid_r
+                scenario=0
+            if scenario==4:
+                #renner.y+=snelheid_r
+                scenario=0
+            if scenario==5:
+                #renner.y-=snelheid_r
+                scenario=0
+            if scenario==6:
+                #renner.y+=snelheid_r
+                scenario=0
+            if scenario==7:
+                #renner.x+=snelheid_r
+                scenario=0
+            if scenario==8:
+                #renner.x-=snelheid_r
+                scenario==0
+
+    #if c==1:
+        print(c)
+    #print (scenario)
+
+#1.02
+
 
 
     #renner_x_oud = renner.x
