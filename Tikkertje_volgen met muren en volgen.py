@@ -23,11 +23,11 @@ ACHTERGROND_KLEUR = (50, 150, 255)
 
 klok = pygame.time.Clock() #snelheid van spel (fps)
 
-renner=pygame.Rect(random.randint(10, 560),random.randint(10, 430),20,20)
-jager=pygame.Rect(random.randint(10, 560),random.randint(10, 430),20,20)
+renner=pygame.Rect(random.randint(0, 560),random.randint(0, 430),20,20)
+jager=pygame.Rect(random.randint(0, 560),random.randint(0, 430),20,20)
 #muur=pygame.Rect(150, 350, 300, 20)
 score=0
-snelheid_r=3
+snelheid_r=2
 snelheid_j=1
 #juur=pygame.Rect(150, 50, 10, 70)
 ruur=0
@@ -63,86 +63,71 @@ while running:
     if a==0: a=0.0001
     b=renner.y-jager.y
     if b==0: b=0.0001
-    c=round(abs(a/b), 1)
+    c=(a/b)
     g=a/b
 
 
     if scenario==0:
         if g>1:
-            if renner.y>jager.y:
-                renner.y-=snelheid_r
+            if renner.y<jager.y:
+                renner.y+=snelheid_r
                 scenario=1
             else:
-                renner.y+=snelheid_r
+                renner.y-=snelheid_r
                 scenario=2
         if 1>g>0:
-            if renner.y>jager.y:
-                renner.x-=snelheid_r
+            if renner.y<jager.y:
+                renner.x+=snelheid_r
                 scenario=3
             else:
-                renner.x+=snelheid_r
+                renner.x-=snelheid_r
                 scenario=4
         if 0>g>(-1):
-            if renner.y>jager.y:
-                renner.x+=snelheid_r
+            if renner.y<jager.y:
+                renner.x-=snelheid_r
                 scenario=5
             else:
-                renner.x-=snelheid_r
+                renner.x+=snelheid_r
                 scenario=6
         if (-1)>g:
-            if renner.y>jager.y:
-                renner.y+=snelheid_r
+            if renner.y<jager.y:
+                renner.y-=snelheid_r
                 scenario=7
             else:
-                renner.y-=snelheid_r
+                renner.y+=snelheid_r
                 scenario=8
     else:
-        if not c==1:
-            if scenario==1:
-                renner.y-=snelheid_r
-            if scenario==2:
-                renner.y+=snelheid_r
-            if scenario==3:
-                renner.x-=snelheid_r
-            if scenario==4:
-                renner.x+=snelheid_r
-            if scenario==5:
-                renner.x+=snelheid_r
-            if scenario==6:
-                renner.x-=snelheid_r
-            if scenario==7:
-                renner.y-=snelheid_r
-            if scenario==8:
-                renner.y+=snelheid_r
+        if (scenario==1 or scenario==2 or scenario==7 or scenario==8) and (abs(b)>abs(a)+20):
+            scenario=0
+        elif (scenario==3 or scenario==4 or scenario==5 or scenario==6) and (20+abs(b)<abs(a)):
+            scenario=0
         else:
             if scenario==1:
-                #renner.x-=snelheid_r
-                scenario=0
+                renner.y+=snelheid_r
             if scenario==2:
-                #renner.x+=snelheid_r
-                scenario=0
+                renner.y-=snelheid_r
             if scenario==3:
-                #renner.y-=snelheid_r
-                scenario=0
+                renner.x+=snelheid_r
             if scenario==4:
-                #renner.y+=snelheid_r
-                scenario=0
+                renner.x-=snelheid_r
             if scenario==5:
-                #renner.y-=snelheid_r
-                scenario=0
+                renner.x-=snelheid_r
             if scenario==6:
-                #renner.y+=snelheid_r
-                scenario=0
+                renner.x+=snelheid_r
             if scenario==7:
-                #renner.x+=snelheid_r
-                scenario=0
+                renner.y+=snelheid_r
             if scenario==8:
-                #renner.x-=snelheid_r
-                scenario==0
+                renner.y-=snelheid_r
 
-    #if c==1:
-        print(c)
-    #print (scenario)
+
+    if abs(b)>abs(a):
+        print("x")
+    if abs(b)<abs(a):
+        print("y")
+
+    #if 1.1>c>0.9:
+    print(c)
+    print (scenario)
 
 #1.02
 
