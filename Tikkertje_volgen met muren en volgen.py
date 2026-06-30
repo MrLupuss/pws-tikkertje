@@ -1,13 +1,16 @@
 import pygame
 import sys
+import random
 
 pygame.init() #pygame opstarten
 
 Scherm_breedte=590
 Scherm_lengte=470
 scherm = pygame.display.set_mode((Scherm_breedte, Scherm_lengte))
+boundary = pygame.Rect(0, 0, Scherm_breedte, Scherm_lengte-33)  # Maakt een vlak even groot als het speelveld
 lettertype1=pygame.font.SysFont("arial",36)
 lettertype2=pygame.font.SysFont("arial",20)
+
 
 pygame.display.set_caption("Tikkertje") #naam van systeem
 
@@ -21,14 +24,13 @@ ACHTERGROND_KLEUR = (50, 150, 255)
 
 klok = pygame.time.Clock() #snelheid van spel (fps)
 
-renner=pygame.Rect(10,10,20,20)
-jager=pygame.Rect(Scherm_breedte-20,Scherm_lengte-50,20,20)
-muur=pygame.Rect(150, 350, 300, 20)
+renner=pygame.Rect(random.randint(0, 560),random.randint(0, 430),20,20)
+jager=pygame.Rect(random.randint(0, 560),random.randint(0, 430),20,20)
 score=0
-snelheid_r=2
-snelheid_j=2
-#juur=pygame.Rect(150, 50, 10, 70)
+snelheid_r=3
+snelheid_j=snelheid_r-1
 ruur=0
+scenario=0
 
 running=True
 while running:
@@ -36,29 +38,95 @@ while running:
         if event.type == pygame.QUIT:  # Als je op het kruisje klikt
             running=False
 
+    renner.clamp_ip(boundary)   # Houdt renner binnen het vlak
+
     renner_x_oud = renner.x
     renner_y_oud = renner.y
-    keys=pygame.key.get_pressed()
-    if keys[pygame.K_LEFT] and renner.x!=0:
-        renner.x-=snelheid_r
-    if keys[pygame.K_RIGHT] and renner.x!=Scherm_breedte-20:
-        renner.x+=snelheid_r
-    if keys[pygame.K_UP] and renner.y!=0:
-        renner.y-=snelheid_r
-    if keys[pygame.K_DOWN] and renner.y!=Scherm_lengte-50:
-        renner.y+=snelheid_r
-    if renner.colliderect(muur):
-        renner.y = renner_y_oud
-    if renner.colliderect(muur):
-        renner.x = renner_x_oud
-    
-    jager_x_oud = jager.x
-    jager_y_oud = jager.y
+    d=jager.x-renner.x
+    if d==0: d=0.0001
+    e=jager.y-renner.y
+    if e==0: e=0.0001
+    f=abs(d/e)
+
     a=renner.x-jager.x
     if a==0: a=0.0001
     b=renner.y-jager.y
     if b==0: b=0.0001
-    c=abs(a/b)
+    c=(a/b)
+    g=a/b
+
+    if scenario==0:
+        if g>1:
+            if renner.y<jager.y:
+                renner.y+=snelheid_r
+                scenario=1
+            else:
+                renner.y-=snelheid_r
+                scenario=2
+        if 1>g>0:
+            if renner.y<jager.y:
+                renner.x+=snelheid_r
+                scenario=3
+            else:
+                renner.x-=snelheid_r
+                scenario=4
+        if 0>g>(-1):
+            if renner.y<jager.y:
+                renner.x-=snelheid_r
+                scenario=5
+            else:
+                renner.x+=snelheid_r
+                scenario=6
+        if (-1)>g:
+            if renner.y<jager.y:
+                renner.y-=snelheid_r
+                scenario=7
+            else:
+                renner.y+=snelheid_r
+                scenario=8
+    else:
+        if (scenario==1 or scenario==2 or scenario==7 or scenario==8) and (abs(b)>abs(a)+(10*snelheid_r)):
+            scenario=0
+        elif (scenario==3 or scenario==4 or scenario==5 or scenario==6) and ((10*snelheid_r)+abs(b)<abs(a)):
+            scenario=0
+        else:
+            if scenario==1:
+                renner.y+=snelheid_r
+            if scenario==2:
+                renner.y-=snelheid_r
+            if scenario==3:
+                renner.x+=snelheid_r
+            if scenario==4:
+                renner.x-=snelheid_r
+            if scenario==5:
+                renner.x-=snelheid_r
+            if scenario==6:
+                renner.x+=snelheid_r
+            if scenario==7:
+                renner.y+=snelheid_r
+            if scenario==8:
+                renner.y-=snelheid_r
+
+    if renner.y>=Scherm_lengte-53 and scenario==1:
+        scenario=8
+    if scenario==2 and renner.y<=0:
+        scenario=7
+    if scenario==3 and renner.x>=Scherm_breedte-23:
+        scenario=5
+    if scenario==4 and renner.x<=0:
+        scenario=6
+    if scenario==5 and renner.x<=0:
+        scenario=3
+    if scenario==6 and renner.x>=Scherm_breedte-23:
+        scenario=4
+    if scenario==7 and renner.y>=Scherm_lengte-53:
+        scenario=2
+    if scenario==8 and renner.y<=0:
+        scenario=1
+
+    jager_x_oud = jager.x
+    jager_y_oud = jager.y
+
     if c>1 and a>0:
         jager.x+=snelheid_j
     elif c>1 and a<0:
@@ -71,38 +139,16 @@ while running:
         jager.y-=snelheid_j
     elif c==1 and b>0:
         jager.y+=snelheid_j
-    
-    if jager.colliderect(muur):
-        if jager.y!=jager_y_oud and jager.x+renner.x-2*muur.x<2*(muur.x+muur.width)-jager.x-renner.x:
-            jager.x-=snelheid_j
-            jager.y=jager_y_oud
-        elif jager.y!=jager_y_oud and jager.x+renner.x-muur.x*2>2*(muur.x+muur.width)-jager.x-renner.x:
-            jager.x+=snelheid_j
-            jager.y=jager_y_oud
-        elif jager.y!=jager_y_oud and jager.x+renner.x-muur.x*2==2*(muur.x+muur.width)-jager.x-renner.x:
-            jager.x+=snelheid_j
-            jager.y=jager_y_oud
-            
-        elif jager.x!=jager_x_oud and jager.y+renner.y-2*muur.y<2*(muur.y+muur.height)-jager.y-renner.y:
-            jager.y-=snelheid_j
-            jager.x=jager_x_oud
-        elif jager.x!=jager_x_oud and jager.y+renner.y-2*muur.y>2*(muur.y+muur.height)-jager.y-renner.y:
-            jager.y+=snelheid_j
-            jager.x=jager_x_oud
-        elif jager.x!=jager_x_oud and jager.y+renner.y-2*muur.y==2*(muur.y+muur.height)-jager.y-renner.y:
-            jager.y+=snelheid_j
-            jager.x=jager_x_oud
-        
 
     score+=1/60
     scherm.fill(ACHTERGROND_KLEUR)
     pygame.draw.rect(scherm, ZWART, (0,Scherm_lengte-30,Scherm_breedte,30))
     pygame.draw.rect(scherm, GROEN, renner)
     pygame.draw.rect(scherm, ROOD, jager)
-    pygame.draw.rect(scherm, BLAUW, muur)
+    #pygame.draw.rect(scherm, BLAUW, muur)
     scherm.blit(lettertype2.render(str(round(score,2)),True,WIT),(10,Scherm_lengte-30))
     pygame.display.flip() #Laat scherm nieuwst aanpassingen zien
-    
+
     if jager.colliderect(renner):
         scherm.fill(ACHTERGROND_KLEUR)
         scherm.blit(lettertype1.render("Jager wint",True,ZWART),(130,100))
