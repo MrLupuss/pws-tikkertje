@@ -11,6 +11,7 @@ boundary = pygame.Rect(0, 0, Scherm_breedte, Scherm_lengte-33)  # Maakt een vlak
 lettertype1=pygame.font.SysFont("arial",36)
 lettertype2=pygame.font.SysFont("arial",20)
 
+
 pygame.display.set_caption("Tikkertje") #naam van systeem
 
 #Kleuren bepaald met rbg (rood, groen, blauw) met schaal van 0-255
@@ -25,11 +26,9 @@ klok = pygame.time.Clock() #snelheid van spel (fps)
 
 renner=pygame.Rect(random.randint(0, 560),random.randint(0, 430),20,20)
 jager=pygame.Rect(random.randint(0, 560),random.randint(0, 430),20,20)
-#muur=pygame.Rect(150, 350, 300, 20)
 score=0
-snelheid_r=2
-snelheid_j=1
-#juur=pygame.Rect(150, 50, 10, 70)
+snelheid_r=3
+snelheid_j=snelheid_r-1
 ruur=0
 scenario=0
 
@@ -39,6 +38,8 @@ while running:
         if event.type == pygame.QUIT:  # Als je op het kruisje klikt
             running=False
 
+    renner.clamp_ip(boundary)   # Houdt renner binnen het vlak
+
     renner_x_oud = renner.x
     renner_y_oud = renner.y
     d=jager.x-renner.x
@@ -46,18 +47,6 @@ while running:
     e=jager.y-renner.y
     if e==0: e=0.0001
     f=abs(d/e)
-    #if f>1 and d>0:
-    #    renner.x+=snelheid_r
-    #elif f>1 and d<0:
-    #    renner.x-=snelheid_r
-    #elif f<1 and e>0:
-    #    renner.y+=snelheid_r
-    #elif f<1 and e<0:
-    #    renner.y-=snelheid_r
-    #elif f==1 and e<0:
-    #    renner.y-=snelheid_r
-    #elif f==1 and e>0:
-    #    renner.y+=snelheid_r
 
     a=renner.x-jager.x
     if a==0: a=0.0001
@@ -65,7 +54,6 @@ while running:
     if b==0: b=0.0001
     c=(a/b)
     g=a/b
-
 
     if scenario==0:
         if g>1:
@@ -97,9 +85,9 @@ while running:
                 renner.y+=snelheid_r
                 scenario=8
     else:
-        if (scenario==1 or scenario==2 or scenario==7 or scenario==8) and (abs(b)>abs(a)+20):
+        if (scenario==1 or scenario==2 or scenario==7 or scenario==8) and (abs(b)>abs(a)+(10*snelheid_r)):
             scenario=0
-        elif (scenario==3 or scenario==4 or scenario==5 or scenario==6) and (20+abs(b)<abs(a)):
+        elif (scenario==3 or scenario==4 or scenario==5 or scenario==6) and ((10*snelheid_r)+abs(b)<abs(a)):
             scenario=0
         else:
             if scenario==1:
@@ -119,56 +107,22 @@ while running:
             if scenario==8:
                 renner.y-=snelheid_r
 
-
-    if abs(b)>abs(a):
-        print("x")
-    if abs(b)<abs(a):
-        print("y")
-
-    #if 1.1>c>0.9:
-    print(c)
-    print (scenario)
-
-#1.02
-
-
-
-    #renner_x_oud = renner.x
-    #renner_y_oud = renner.y
-    #keys=pygame.key.get_pressed()
-    #if keys[pygame.K_LEFT] and renner.x!=0:
-    #    renner.x-=snelheid_r
-    #elif keys[pygame.K_RIGHT] and renner.x!=Scherm_breedte-20:
-    #    renner.x+=snelheid_r
-    #elif keys[pygame.K_UP] and renner.y!=0:
-    #    renner.y-=snelheid_r
-    #elif keys[pygame.K_DOWN] and renner.y!=Scherm_lengte-50:
-    #    renner.y+=snelheid_r
-    #if renner.colliderect(muur):
-    #    renner.y = renner_y_oud
-    #if renner.colliderect(muur):
-    #    renner.x = renner_x_oud
-
-    #if renner.colliderect(muur):
-    #    if renner.y!=renner_y_oud and renner.x+jager.x-2*muur.x<2*(muur.x+muur.width)-renner.x-jager.x:
-    #        renner.x-=snelheid_r
-    #        renner.y=renner_y_oud
-    #    elif renner.y!=renner_y_oud and renner.x+jager.x-muur.x*2>2*(muur.x+muur.width)-renner.x-jager.x:
-    #        renner.x+=snelheid_r
-    #        renner.y=renner_y_oud
-    #    elif renner.y!=renner_y_oud and renner.x+jager.x-muur.x*2==2*(muur.x+muur.width)-renner.x-jager.x:
-    #        renner.x+=snelheid_r
-    #        renner.y=renner_y_oud
-    #        
-    #    elif renner.x!=renner_x_oud and renner.y+jager.y-2*muur.y<2*(muur.y+muur.height)-renner.y-jager.y:
-    #        renner.y-=snelheid_r
-    #        renner.x=renner_x_oud
-    #    elif renner.x!=renner_x_oud and renner.y+jager.y-2*muur.y>2*(muur.y+muur.height)-renner.y-jager.y:
-    #        renner.y+=snelheid_r
-    #        renner.x=renner_x_oud
-    #    elif renner.x!=renner_x_oud and renner.y+jager.y-2*muur.y==2*(muur.y+muur.height)-renner.y-jager.y:
-    #        renner.y+=snelheid_r
-    #        renner.x=renner_x_oud
+    if renner.y>=Scherm_lengte-53 and scenario==1:
+        scenario=8
+    if scenario==2 and renner.y<=0:
+        scenario=7
+    if scenario==3 and renner.x>=Scherm_breedte-23:
+        scenario=5
+    if scenario==4 and renner.x<=0:
+        scenario=6
+    if scenario==5 and renner.x<=0:
+        scenario=3
+    if scenario==6 and renner.x>=Scherm_breedte-23:
+        scenario=4
+    if scenario==7 and renner.y>=Scherm_lengte-53:
+        scenario=2
+    if scenario==8 and renner.y<=0:
+        scenario=1
 
     jager_x_oud = jager.x
     jager_y_oud = jager.y
@@ -185,27 +139,6 @@ while running:
         jager.y-=snelheid_j
     elif c==1 and b>0:
         jager.y+=snelheid_j
-    
-    #if jager.colliderect(muur):
-    #    if jager.y!=jager_y_oud and jager.x+renner.x-2*muur.x<2*(muur.x+muur.width)-jager.x-renner.x:
-    #        jager.x-=snelheid_j
-    #        jager.y=jager_y_oud
-    #    elif jager.y!=jager_y_oud and jager.x+renner.x-muur.x*2>2*(muur.x+muur.width)-jager.x-renner.x:
-    #        jager.x+=snelheid_j
-    #        jager.y=jager_y_oud
-    #    elif jager.y!=jager_y_oud and jager.x+renner.x-muur.x*2==2*(muur.x+muur.width)-jager.x-renner.x:
-    #        jager.x+=snelheid_j
-    #        jager.y=jager_y_oud
-    #        
-    #    elif jager.x!=jager_x_oud and jager.y+renner.y-2*muur.y<2*(muur.y+muur.height)-jager.y-renner.y:
-    #        jager.y-=snelheid_j
-    #        jager.x=jager_x_oud
-    #    elif jager.x!=jager_x_oud and jager.y+renner.y-2*muur.y>2*(muur.y+muur.height)-jager.y-renner.y:
-    #        jager.y+=snelheid_j
-    #        jager.x=jager_x_oud
-    #    elif jager.x!=jager_x_oud and jager.y+renner.y-2*muur.y==2*(muur.y+muur.height)-jager.y-renner.y:
-    #        jager.y+=snelheid_j
-    #        jager.x=jager_x_oud
 
     score+=1/60
     scherm.fill(ACHTERGROND_KLEUR)
@@ -215,8 +148,6 @@ while running:
     #pygame.draw.rect(scherm, BLAUW, muur)
     scherm.blit(lettertype2.render(str(round(score,2)),True,WIT),(10,Scherm_lengte-30))
     pygame.display.flip() #Laat scherm nieuwst aanpassingen zien
-    
-    renner.clamp_ip(boundary)   # Houdt renner binnen het vlak
 
     if jager.colliderect(renner):
         scherm.fill(ACHTERGROND_KLEUR)
@@ -227,9 +158,6 @@ while running:
         running=False
     
     klok.tick(60) #spel draait op 60 fps
-
-    
-
 
 pygame.quit()
 sys.exit()
